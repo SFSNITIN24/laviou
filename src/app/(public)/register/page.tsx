@@ -17,7 +17,7 @@ const RegisterPage = () => {
     document.cookie = `auth-token=dummy-auth-token-123; path=/; max-age=${
       60 * 60 * 24
     }`;
-    router.push("/dashboard");
+    router.push("/onboarding");
   };
 
   return (

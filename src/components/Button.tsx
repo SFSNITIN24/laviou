@@ -25,7 +25,7 @@ export default function Button({
   const variantClasses = {
     primary: 'bg-[#8A9078] text-white hover:bg-[#7A8068]',
     secondary: 'bg-white text-[#8A8A8A] border border-[#E9E7E2] ',
-    outline: 'bg-white text-[#8A8A8A] border border-[#E9E7E2] hover:bg-gray-50'
+    outline: 'text-[#8A8A8A] border border-[#E9E7E2] hover:bg-gray-50'
   };
 
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';

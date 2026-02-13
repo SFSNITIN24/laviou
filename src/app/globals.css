@@ -79,3 +79,8 @@ body::-webkit-scrollbar {
 .ant-form-item {
   margin-bottom: 12px !important;
 }
+
+.custom-input-colored{
+  height: 56px !important;
+  background: #F2F1ED !important;
+}
