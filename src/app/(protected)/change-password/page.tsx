@@ -57,11 +57,14 @@ const ChangePasswordPage = () => {
               prefixCls="custom-input"
               iconRender={(visible) =>
                 visible ? (
-                  
-                    <Eye />
-                ) : (
-                    <EyeSlash />
-                )
+                <div>
+                  <Eye />
+                </div>
+              ) : (
+                <div>
+                  <EyeSlash />
+                </div>
+              )
               }
             />
           </Form.Item>
@@ -77,10 +80,14 @@ const ChangePasswordPage = () => {
               prefixCls="custom-input"
               iconRender={(visible) =>
                 visible ? (
-                    <Eye />
-                ) : (
-                    <EyeSlash />
-                )
+                <div>
+                  <Eye />
+                </div>
+              ) : (
+                <div>
+                  <EyeSlash />
+                </div>
+              )
               }
             />
           </Form.Item>
@@ -97,10 +104,14 @@ const ChangePasswordPage = () => {
               prefixCls="custom-input"
               iconRender={(visible) =>
                 visible ? (
-                    <Eye />
-                ) : (
-                    <EyeSlash />
-                )
+                <div>
+                  <Eye />
+                </div>
+              ) : (
+                <div>
+                  <EyeSlash />
+                </div>
+              )
               }
             />
           </Form.Item>

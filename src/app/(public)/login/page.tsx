@@ -56,9 +56,13 @@ export default function LoginPage() {
             prefixCls="custom-input"
             iconRender={(visible) =>
               visible ? (
-                <Eye />
+                <div>
+                  <Eye />
+                </div>
               ) : (
-                <EyeSlash />
+                <div>
+                  <EyeSlash />
+                </div>
               )
             }
           />

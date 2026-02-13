@@ -50,9 +50,13 @@ export default function ResetPasswordPage() {
             prefixCls="custom-input"
             iconRender={(visible) =>
               visible ? (
-                <Eye />
+                <div>
+                  <Eye />
+                </div>
               ) : (
-                <EyeSlash />
+                <div>
+                  <EyeSlash />
+                </div>
               )
             }
           />
@@ -70,9 +74,13 @@ export default function ResetPasswordPage() {
             prefixCls="custom-input"
             iconRender={(visible) =>
               visible ? (
-                <Eye />
+                <div>
+                  <Eye />
+                </div>
               ) : (
-                <EyeSlash />
+                <div>
+                  <EyeSlash />
+                </div>
               )
             }
           />

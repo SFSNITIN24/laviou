@@ -76,9 +76,13 @@ const RegisterPage = () => {
             placeholder="Enter password"
             iconRender={(visible) =>
               visible ? (
+                <div>
                   <Eye />
+                </div>
               ) : (
+                <div>
                   <EyeSlash />
+                </div>
               )
             }
             prefixCls="custom-input"
@@ -97,9 +101,13 @@ const RegisterPage = () => {
             autoComplete="new-password"
             iconRender={(visible) =>
               visible ? (
+                <div>
                   <Eye />
+                </div>
               ) : (
+                <div>
                   <EyeSlash />
+                </div>
               )
             }
           />
