@@ -11,9 +11,21 @@ export function middleware(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(`${path}/`)
   );
 
-  // Also allow homepage without authentication for now
+  // Allow public paths and homepage
   if (isPublicPath || pathname === "/") {
+    // If user is already authenticated, redirect to museum instead of dashboard
+    const token = request.cookies.get("auth-token")?.value;
+    if (token && (pathname === "/login" || pathname === "/register")) {
+      const museumUrl = new URL("/museum", request.url);
+      return NextResponse.redirect(museumUrl);
+    }
     return NextResponse.next();
+  }
+
+  // Redirect dashboard to museum
+  if (pathname === "/dashboard") {
+    const museumUrl = new URL("/museum", request.url);
+    return NextResponse.redirect(museumUrl);
   }
 
   // Check for auth token

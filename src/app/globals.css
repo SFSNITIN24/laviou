@@ -20,24 +20,34 @@
   }
 }
 
+html, body {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Hide scrollbars for all browsers while maintaining scroll functionality */
+/* ✅ Hide scrollbars but keep scrolling */
 html, body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+  display: none;
 }
 
-/* Hide scrollbar visual but keep functionality for all elements */
 *::-webkit-scrollbar {
   width: 0px;
   height: 0px;
@@ -45,20 +55,11 @@ body::-webkit-scrollbar {
 }
 
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Ensure app takes full height */
-#__next {
-  height: 100vh;
-}
-
-html, body {
-  height: 100vh;
-}
-
-/* Global Antd Modal overrides */
+/* ✅ Antd overrides */
 .ant-modal .ant-modal-container {
   position: relative;
   background-color: transparent;
@@ -70,11 +71,11 @@ html, body {
   padding: 0;
 }
 
-.custom-input{
+.custom-input {
   height: 56px !important;
   background: #F8F7F4 !important;
 }
 
-.ant-form-item{
+.ant-form-item {
   margin-bottom: 12px !important;
 }

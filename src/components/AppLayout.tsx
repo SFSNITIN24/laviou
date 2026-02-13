@@ -183,7 +183,7 @@ export default function AppLayout({
       case "default":
       default:
         return (
-          <main className="px-4 sm:px-[40px]">
+          <main className="px-4 sm:px-[40px] md:px-[80px]">
             {children}
           </main>
         );
