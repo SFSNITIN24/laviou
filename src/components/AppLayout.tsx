@@ -1,8 +1,10 @@
 import React from "react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Button from "@/components/Button";
-import Logo from "./Logo";
+import { ReactNode } from "react";
+import Link from "next/link";
 import { ChevronLeftIcon } from "@/utils/svg";
+import Logo from "./Logo";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -45,7 +47,7 @@ export default function AppLayout({
             {/* Left side - Title and Navigation Link */}
             <div className="flex items-center gap-[12px] cursor-pointer">
               {authLeftTitle && authLeftLink && (
-                <a
+                <Link
                   href={authLeftLink}
                   className="flex items-center gap-[12px] cursor-pointer"
                 >
@@ -53,7 +55,7 @@ export default function AppLayout({
                   <span className="font-semibold text-sm leading-[1.5] tracking-normal text-center text-[#1A1A1A]">
                     {authLeftTitle}
                   </span>
-                </a>
+                </Link>
               )}
             </div>
 
@@ -63,12 +65,12 @@ export default function AppLayout({
                 <span className="text-gray-600">{authRightText}</span>
               )}
               {authRightSwitchText && authRightSwitchLink && (
-                <a
+                <Link
                   href={authRightSwitchLink}
-                  className="text-sm font-normal leading-[1.5] tracking-normal text-center text-[#8A9078]"
+                  className="font-semibold text-sm leading-[1.5] tracking-normal text-center text-[#1A1A1A]"
                 >
                   {authRightSwitchText}
-                </a>
+                </Link>
               )}
             </div>
           </div>
@@ -88,7 +90,7 @@ export default function AppLayout({
 
       case "user":
         return (
-          <header className="bg-white px-4 sm:px-[40px] py-[16px] gap-[10px] border-b-[1px] border-[#E9E7E2] h-[72px]">
+          <header className="px-4 sm:px-[40px] py-[16px] gap-[10px] border-b-[1px] border-[#E9E7E2] h-[72px]">
             <div className="flex items-center justify-between h-full">
               {/* Logo */}
               <div className="flex items-center gap-[7px] md:gap-[9px] my-[5px]">
@@ -110,7 +112,7 @@ export default function AppLayout({
       case "default":
       default:
         return (
-          <header className="bg-white px-4 sm:px-[40px] py-[16px] gap-[10px] border-b-[1px] border-[#E9E7E2] h-[72px]">
+          <header className="px-4 sm:px-[40px] py-[16px] gap-[10px] border-b-[1px] border-[#E9E7E2] h-[72px]">
             <div className="flex items-center justify-between h-full">
               {/* Logo */}
               <div className="flex items-center gap-[7px] md:gap-[9px] my-[5px]">
@@ -181,7 +183,7 @@ export default function AppLayout({
       case "default":
       default:
         return (
-          <main className="flex-1 flex items-center justify-center px-4 sm:px-0">
+          <main className="px-4 sm:px-[40px]">
             {children}
           </main>
         );
@@ -220,23 +222,9 @@ export default function AppLayout({
         );
     }
   };
-
-  // Determine background class based on variant
-  const getBackgroundClass = () => {
-    switch (variant) {
-      case "auth":
-        return "bg-orange-50";
-      case "minimal":
-        return "bg-gray-50";
-      case "default":
-      default:
-        return "bg-white";
-    }
-  };
-
   return (
     <div
-      className={`${getBackgroundClass()} ${variant === "auth" || variant === "default" ? "min-h-screen flex flex-col" : "min-h-screen"}`}
+      className={`bg-[#F2F1ED] ${variant === "auth" || variant === "default" ? "min-h-screen flex flex-col" : "min-h-screen"}`}
     >
       {renderHeader()}
       {renderMain()}

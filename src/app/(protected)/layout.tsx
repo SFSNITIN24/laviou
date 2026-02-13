@@ -3,7 +3,9 @@
 import Logo from "@/components/Logo";
 import { CloseIcon } from "@/utils/svg";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import LogoutModal from "@/components/modals/LogoutModal";
+import AppLayout from "@/components/AppLayout";
 
 export default function ProtectedLayout({
   children,
@@ -12,6 +14,7 @@ export default function ProtectedLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleToggleSidebar = () => {
@@ -54,15 +57,19 @@ export default function ProtectedLayout({
           {/* Menu Items */}
           <div className="space-y-2">
             {[
-              { href: "/dashboard", label: "Dashboard" },
-              { href: "/items", label: "Items" },
-              { href: "/concierge", label: "Concierge" },
-              { href: "/settings", label: "Settings" },
-              { href: "/sharing", label: "Sharing" },
+              { label: "My Profile", href: "/profile" },
+              { label: "Change Password", href: "/change-password" },
+              { label: "Draft", href: "/draft" },
+              { label: "My Donation", href: "/donation" },
+              { label: "Concierge", href: "/concierge" },
+              { label: "Archive", href: "/archive" },
             ]?.map((item) => (
-              <a
+              <span
                 key={item.href}
-                href={item.href}
+                onClick={() => {
+                  router.push(item.href);
+                  setIsSidebarOpen(false);
+                }}
                 className="
                   flex items-center gap-[6px]
                   w-[210px] h-[37px]
@@ -72,18 +79,17 @@ export default function ProtectedLayout({
                   text-white
                   hover:bg-white/20
                   transition-colors
+                  cursor-pointer
                 "
-                onClick={() => setIsSidebarOpen(false)}
               >
                 {item.label}
-              </a>
+              </span>
             ))}
           </div>
 
           {/* Logout — pinned to bottom */}
           <div className="mt-auto border-t border-white/20 pt-3">
-            <a
-              href="#"
+            <span
               className="
                 flex items-center gap-[6px]
                 w-[210px] h-[37px]
@@ -101,7 +107,7 @@ export default function ProtectedLayout({
               }}
             >
               Logout
-            </a>
+            </span>
           </div>
         </nav>
       </aside>
@@ -119,7 +125,10 @@ export default function ProtectedLayout({
 
       {/* Main content */}
       <div className={`${isSidebarOpen ? "overflow-hidden max-h-screen" : ""}`}>
+        <AppLayout variant="user" showFooter={false}>
+
         {children}
+        </AppLayout>
       </div>
     </>
   );

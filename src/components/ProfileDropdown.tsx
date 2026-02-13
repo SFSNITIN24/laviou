@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import LogoutModal from "@/components/modals/LogoutModal";
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const menuItems = [
-    { label: "My Profile", href: "/profile" },
-    { label: "Change Password", href: "/change-password" },
-    { label: "Draft", href: "/draft" },
-    { label: "My Donation", href: "/donation" },
-    { label: "Concierge", href: "/concierge" },
-    { label: "Archive", href: "/archive" },
+    { label: "My Profile", link: "/profile" },
+    { label: "Change Password", link: "/change-password" },
+    { label: "Draft", link: "/draft" },
+    { label: "My Donation", link: "/donation" },
+    { label: "Concierge", link: "/concierge" },
+    { label: "Archive", link: "/archive" },
   ];
 
   return (
@@ -59,9 +61,12 @@ export default function ProfileDropdown() {
   "
 >
   {menuItems?.map((item, index) => (
-    <a
+    <span
       key={index}
-      href={item.href}
+      onClick={() => {
+        router.push(item.link);
+        setIsOpen(false);
+      }}
       className="
         flex items-center gap-[5px]
         w-[151px] h-[37px]
@@ -71,19 +76,18 @@ export default function ProfileDropdown() {
         text-gray-700
         hover:bg-gray-50
         transition-colors
+        cursor-pointer
       "
-      onClick={() => setIsOpen(false)}
     >
       {item.label}
-    </a>
+    </span>
   ))}
 
   {/* Divider */}
   <div className="border-t border-gray-200 my-2" />
 
   {/* Logout */}
-  <a
-    href="#"
+  <span
     className="
       flex items-center gap-[5px]
       w-[151px] h-[37px]
@@ -101,7 +105,7 @@ export default function ProfileDropdown() {
     }}
   >
     Logout
-  </a>
+  </span>
 </div>
 
       )}

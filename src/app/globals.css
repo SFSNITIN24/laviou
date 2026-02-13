@@ -69,3 +69,12 @@ html, body {
   pointer-events: auto;
   padding: 0;
 }
+
+.custom-input{
+  height: 56px !important;
+  background: #F8F7F4 !important;
+}
+
+.ant-form-item{
+  margin-bottom: 12px !important;
+}
