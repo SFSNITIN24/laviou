@@ -3,7 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/auth.api";
 import type { LoginPayload, RegisterPayload } from "../types/auth.types";
-import { clearAuthToken, setAuthToken } from "@/lib/auth-token";
+import {
+    clearAuthToken,
+    clearRefreshToken,
+    setAuthToken,
+    setRefreshToken,
+} from "@/lib/auth-token";
 
 export const authKeys = {
     all: ["auth"] as const,
@@ -24,6 +29,7 @@ export function useLogin() {
         mutationFn: (payload: LoginPayload) => authApi.login(payload),
         onSuccess: (res) => {
             setAuthToken(res.data.data.accessToken);
+            setRefreshToken(res.data.data.refreshToken);
             queryClient.invalidateQueries({ queryKey: authKeys.me() });
         },
     });
@@ -35,6 +41,7 @@ export function useRegister() {
         mutationFn: (payload: RegisterPayload) => authApi.register(payload),
         onSuccess: (res) => {
             setAuthToken(res.data.data.tokens.accessToken);
+            setRefreshToken(res.data.data.tokens.refreshToken);
             queryClient.invalidateQueries({ queryKey: authKeys.me() });
         },
     });
@@ -47,6 +54,7 @@ export function useLogout() {
         mutationFn: () => authApi.logout(),
         onSuccess: () => {
             clearAuthToken();
+            clearRefreshToken();
             queryClient.clear();
         },
     });
