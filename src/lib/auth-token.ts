@@ -1,4 +1,5 @@
 export const AUTH_TOKEN_COOKIE = "auth-token";
+export const REFRESH_TOKEN_STORAGE_KEY = "refresh-token";
 
 export function setAuthToken(token: string, maxAgeSeconds = 60 * 60 * 24 * 7) {
     const isHttps =
@@ -14,5 +15,29 @@ export function clearAuthToken() {
         typeof window !== "undefined" && window.location.protocol === "https:";
     const secure = isHttps ? "; secure" : "";
     document.cookie = `${AUTH_TOKEN_COOKIE}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax${secure}`;
+}
+
+export function setRefreshToken(token: string) {
+    try {
+        localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, token);
+    } catch {
+        // ignore
+    }
+}
+
+export function getRefreshToken(): string | null {
+    try {
+        return localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
+    } catch {
+        return null;
+    }
+}
+
+export function clearRefreshToken() {
+    try {
+        localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+    } catch {
+        // ignore
+    }
 }
 
