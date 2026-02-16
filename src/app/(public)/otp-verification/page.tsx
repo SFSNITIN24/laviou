@@ -6,17 +6,52 @@ import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
-import { getPasswordResetEmail, markOtpVerified } from "@/lib/password-reset-flow";
-import { useMemo } from "react";
+import { authApi } from "@/features/auth/api/auth.api";
+import { getApiErrorMessage } from "@/lib/api-error";
+import {
+  getPasswordResetEmail,
+  getPasswordResetToken,
+  markOtpVerified,
+  setPasswordResetToken,
+} from "@/lib/password-reset-flow";
+import { useMemo, useState } from "react";
+import type { ApiResponse } from "@/types/api.types";
+
+type ForgotPasswordResult = { token?: string };
 
 export default function OtpVerificationPage() {
   const router = useRouter();
   const email = useMemo(() => getPasswordResetEmail(), []);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values: { otp: string }) => {
-    console.log("OTP Submitted:", values.otp);
+  const handleSubmit = async (values: { otp: string }) => {
+    setError(null);
+    const expected = getPasswordResetToken();
+    if (expected && expected !== values.otp) {
+      setError("Invalid OTP");
+      return;
+    }
+    // For now, OTP is treated as the token needed for reset-password call.
+    setPasswordResetToken(values.otp);
     markOtpVerified();
     router.push("/reset-password");
+  };
+
+  const handleResend = async () => {
+    if (!email) return;
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await authApi.forgotPassword(email);
+      const data = res.data as ApiResponse<ForgotPasswordResult>;
+      const token = data.data.token;
+      if (token) setPasswordResetToken(token);
+    } catch (e: unknown) {
+      setError(getApiErrorMessage(e, "Failed to resend code"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,6 +70,7 @@ export default function OtpVerificationPage() {
         requiredMark={false}
         className="mt-6 w-full"
       >
+        {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
         <Form.Item
           label={<FormLabel>OTP</FormLabel>}
           name="otp"
@@ -50,10 +86,10 @@ export default function OtpVerificationPage() {
         </Form.Item>
 
         <div
-          onClick={() => console.log("Resend clicked")}
+          onClick={handleResend}
           className="text-[#8A9078] hover:underline text-base font-medium leading-[1.5] tracking-normal text-right cursor-pointer"
         >
-          Resend Code
+          {loading ? "Resending..." : "Resend Code"}
         </div>
 
 

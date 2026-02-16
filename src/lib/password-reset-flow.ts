@@ -1,6 +1,7 @@
 export const PW_RESET_FLOW_COOKIE = "pw-reset-flow";
 export const PW_RESET_VERIFIED_COOKIE = "pw-reset-verified";
 export const PW_RESET_EMAIL_KEY = "pw-reset-email";
+export const PW_RESET_TOKEN_KEY = "pw-reset-token";
 
 export function startPasswordResetFlow(email: string) {
     // 10 minutes
@@ -23,6 +24,7 @@ export function clearPasswordResetFlow() {
     document.cookie = `${PW_RESET_VERIFIED_COOKIE}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax`;
     try {
         sessionStorage.removeItem(PW_RESET_EMAIL_KEY);
+    sessionStorage.removeItem(PW_RESET_TOKEN_KEY);
     } catch {
         // ignore
     }
@@ -34,5 +36,21 @@ export function getPasswordResetEmail(): string | null {
     } catch {
         return null;
     }
+}
+
+export function setPasswordResetToken(token: string) {
+  try {
+    sessionStorage.setItem(PW_RESET_TOKEN_KEY, token);
+  } catch {
+    // ignore
+  }
+}
+
+export function getPasswordResetToken(): string | null {
+  try {
+    return sessionStorage.getItem(PW_RESET_TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
