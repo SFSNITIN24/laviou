@@ -8,6 +8,9 @@ import type {
 } from "../types/auth.types";
 import type { ApiResponse } from "@/types/api.types";
 
+type ForgotPasswordResult = { sent: true };
+type VerifyResetOtpResult = { resetToken: string };
+
 export const authApi = {
     login: (payload: LoginPayload) =>
         apiClient.post<ApiResponse<AuthTokens>>("/auth/login", payload),
@@ -23,7 +26,10 @@ export const authApi = {
     me: () => apiClient.get<ApiResponse<AuthUser>>("/auth/me"),
 
     forgotPassword: (email: string) =>
-        apiClient.post("/auth/forgot-password", { email }),
+        apiClient.post<ApiResponse<ForgotPasswordResult>>("/auth/forgot-password", { email }),
+
+    verifyResetOtp: (email: string, otp: string) =>
+        apiClient.post<ApiResponse<VerifyResetOtpResult>>("/auth/verify-reset-otp", { email, otp }),
 
     resetPassword: (token: string, password: string) =>
         apiClient.post("/auth/reset-password", { token, password }),
