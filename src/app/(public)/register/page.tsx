@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Row, Col } from "antd";
+import { Form, Input, Row, Col, message } from "antd";
 import { Eye, EyeSlash } from "@/utils/svg";
 import { useRouter } from "next/navigation";
 import { RegisterPayload } from "@/features/auth/types/auth.types";
@@ -9,21 +9,18 @@ import Button from "@/components/Button";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
 import { useRegister } from "@/features/auth/hooks/useAuth";
-import { useState } from "react";
 import { getApiErrorMessage } from "@/lib/api-error";
 
 const RegisterPage = () => {
   const router = useRouter();
   const register = useRegister();
-  const [error, setError] = useState<string | null>(null);
 
   const onFinish = async (values: RegisterPayload) => {
-    setError(null);
     try {
       await register.mutateAsync(values);
       router.push("/onboarding");
     } catch (e: unknown) {
-      setError(getApiErrorMessage(e, "Registration failed"));
+      message.error(getApiErrorMessage(e, "Registration failed"));
     }
   };
 
@@ -44,7 +41,7 @@ const RegisterPage = () => {
         className="mt-8"
         requiredMark={false}
       >
-        {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
+      
         <Row gutter={12}>
           <Col xs={24} sm={12}>
             <Form.Item

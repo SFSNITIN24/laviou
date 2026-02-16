@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import AppLayout from "@/components/AppLayout";
-import { Form, Input } from "antd";
+import { Form, Input, message } from "antd";
 import { Eye, EyeSlash } from "@/utils/svg";
 import Button from "@/components/Button";
 import { LoginPayload } from "@/features/auth/types/auth.types";
@@ -16,7 +16,6 @@ import { getApiErrorMessage } from "@/lib/api-error";
 export default function LoginPage() {
   const router = useRouter();
   const login = useLogin();
-  const [error, setError] = useState<string | null>(null);
   const [callbackUrl] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     const url = new URL(window.location.href);
@@ -24,12 +23,11 @@ export default function LoginPage() {
   });
 
   const handleSubmit = async (values: LoginPayload) => {
-    setError(null);
     try {
       await login.mutateAsync(values);
       router.push(callbackUrl || "/museum");
     } catch (e: unknown) {
-      setError(getApiErrorMessage(e, "Login failed"));
+      message.error(getApiErrorMessage(e, "Login failed"));
     }
   };
 
@@ -51,7 +49,6 @@ export default function LoginPage() {
         className="mt-8"
         requiredMark={false}
       >
-        {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
         <Form.Item
           label={<FormLabel>Email address</FormLabel>}
           name="email"
