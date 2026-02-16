@@ -5,12 +5,14 @@ import FormLabel from "@/components/FormLabel";
 import { Form, Input } from "antd";
 import { useRouter } from "next/navigation";
 import { formRules } from "@/constants/formRules";
+import { startPasswordResetFlow } from "@/lib/password-reset-flow";
 
 const ForgotPasswordForm = () => {
   const router = useRouter();
 
   const onFinish = (values: { email: string }) => {
     console.log(values);
+    startPasswordResetFlow(values.email);
     router.push("/otp-verification");
   };
 

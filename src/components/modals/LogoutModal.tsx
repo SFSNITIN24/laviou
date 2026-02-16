@@ -2,6 +2,7 @@
 
 import ModalComponent from "@/components/ModalComponent";
 import Button from "../Button";
+import { useLogout } from "@/features/auth/hooks/useAuth";
 
 
 interface LogoutModalProps {
@@ -10,6 +11,8 @@ interface LogoutModalProps {
 }
 
 export default function LogoutModal({ open, onClose }: LogoutModalProps) {
+  const logout = useLogout();
+
   return (
     <ModalComponent open={open} onClose={onClose} closable={false} mask={{ closable: false }}>
       <div className="
@@ -34,25 +37,18 @@ export default function LogoutModal({ open, onClose }: LogoutModalProps) {
         </div>
 
         <div className="space-y-4">
-          <Button variant="secondary" className="w-full h-[48px]" onClick={() => {
-              // Clear all cookies
-              document.cookie.split(";").forEach((c) => {
-                document.cookie = c
-                  .replace(/^ +/, "")
-                  .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-              });
-
-              // Clear localStorage
-              localStorage.clear();
-
-              // Clear sessionStorage
-              sessionStorage.clear();
-
-              // Redirect to home page
-              window.location.href = "/";
+          <Button
+            variant="secondary"
+            className="w-full h-[48px]"
+            onClick={async () => {
+              try {
+                await logout.mutateAsync();
+              } finally {
+                window.location.href = "/";
+              }
             }}
           >
-            Log out
+            {logout.isPending ? "Logging out..." : "Log out"}
           </Button>
           <Button variant="secondary" className="w-full h-[48px]" onClick={onClose}>
             Stay signed in

@@ -9,15 +9,28 @@ import { LoginPayload } from "@/features/auth/types/auth.types";
 import { useRouter } from "next/navigation";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
+import { useLogin } from "@/features/auth/hooks/useAuth";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const login = useLogin();
+  const [error, setError] = useState<string | null>(null);
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
 
-  const handleSubmit = (values: LoginPayload) => {
-    console.log(values);
-    document.cookie = `auth-token=dummy-auth-token-123; path=/; max-age=${60 * 60 * 24
-      }`;
-    router.push("/dashboard");
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    setCallbackUrl(url.searchParams.get("callbackUrl"));
+  }, []);
+
+  const handleSubmit = async (values: LoginPayload) => {
+    setError(null);
+    try {
+      await login.mutateAsync(values);
+      router.push(callbackUrl || "/museum");
+    } catch (e: any) {
+      setError(e?.response?.data?.message || "Login failed");
+    }
   };
 
   return (
@@ -38,6 +51,7 @@ export default function LoginPage() {
         className="mt-8"
         requiredMark={false}
       >
+        {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
         <Form.Item
           label={<FormLabel>Email address</FormLabel>}
           name="email"
@@ -78,7 +92,7 @@ export default function LoginPage() {
 
 
         <Button htmlType="submit" variant="primary" className="w-full !h-12 !mt-9">
-          Login
+          {login.isPending ? "Logging in..." : "Login"}
         </Button>
       </Form>
     </AppLayout>

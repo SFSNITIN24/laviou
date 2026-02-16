@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { ButtonForwardButton, ButtonPreviousButton } from "@/utils/svg";
+import { useItems } from "@/features/items/hooks/useItems";
 
 interface Collection {
   id: string;
@@ -12,22 +13,19 @@ interface Collection {
   itemCount: number;
 }
 
-
-const mockCollections: Collection[] = Array.from({ length: 20 }).map(
-  (_, i) => ({
-    id: String(i + 1),
-    title: `Collection ${i + 1}`,
-    description: "This collection explores the quiet spaces between destinations.",
-    image: "/api/placeholder/300/200",
-    itemCount: Math.floor(Math.random() * 25) + 1,
-  })
-);
-
 const CARD_WIDTH = 346;
 const GAP = 100;
 
 export default function MuseumPage() {
-  const collections = mockCollections;
+  const { data, isLoading, error } = useItems(1);
+  const collections: Collection[] =
+    data?.data?.map((item) => ({
+      id: item.id,
+      title: item.name,
+      description: item.description,
+      image: item.imageUrl || "/api/placeholder/300/200",
+      itemCount: 1,
+    })) ?? [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(3);
 
@@ -50,6 +48,13 @@ export default function MuseumPage() {
   const visibleCollections = Array.from({
     length: Math.min(cardsPerView, collections.length),
   }).map((_, i) => collections[(currentIndex + i) % collections.length])
+
+  if (isLoading) {
+    return <div className="p-6">Loading museum...</div>;
+  }
+  if (error) {
+    return <div className="p-6">Failed to load museum items.</div>;
+  }
 
   const handlePrevious = () => {
     setCurrentIndex((p) =>
@@ -103,7 +108,7 @@ export default function MuseumPage() {
         {/* Collection Cards */}
         <div className="flex justify-center gap-6 lg:gap-[100px]">
 
-          {visibleCollections?.map((collection) => (
+          {visibleCollections?.length ? visibleCollections.map((collection) => (
             <div
               key={collection.id}
               className="w-[346px] h-[456px] bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col"
@@ -136,7 +141,11 @@ export default function MuseumPage() {
                 </div>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="text-center text-gray-600">
+              No items yet. Complete onboarding to add your first item.
+            </div>
+          )}
         </div>
         <div className="flex justify-center gap-4 mt-3">
           <button

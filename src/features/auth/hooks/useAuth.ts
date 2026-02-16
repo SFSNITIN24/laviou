@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/auth.api";
 import type { LoginPayload, RegisterPayload } from "../types/auth.types";
+import { clearAuthToken, setAuthToken } from "@/lib/auth-token";
 
 export const authKeys = {
     all: ["auth"] as const,
@@ -21,7 +22,8 @@ export function useLogin() {
 
     return useMutation({
         mutationFn: (payload: LoginPayload) => authApi.login(payload),
-        onSuccess: () => {
+        onSuccess: (res) => {
+            setAuthToken(res.data.data.accessToken);
             queryClient.invalidateQueries({ queryKey: authKeys.me() });
         },
     });
@@ -39,6 +41,7 @@ export function useLogout() {
     return useMutation({
         mutationFn: () => authApi.logout(),
         onSuccess: () => {
+            clearAuthToken();
             queryClient.clear();
         },
     });

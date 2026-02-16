@@ -21,7 +21,23 @@ const AddMeaning = () => {
   const router = useRouter();
 
   const handleSubmit = (values: any) => {
-    console.log(values);
+    try {
+      sessionStorage.setItem(
+        "onboarding:itemDraft",
+        JSON.stringify({
+          name: values.name,
+          description:
+            values.meaning ||
+            `Meaning: ${values.name}${values.enteredAt ? `\nEntered: ${values.enteredAt}` : ""}${
+              Array.isArray(values.feelings) && values.feelings.length
+                ? `\nFeelings: ${values.feelings.join(", ")}`
+                : ""
+            }`,
+        }),
+      );
+    } catch {
+      // ignore
+    }
     router.push("/onboarding/confirmation");
   };
 
@@ -44,7 +60,7 @@ const AddMeaning = () => {
           <Form form={form} onFinish={handleSubmit} layout="vertical">
             <Form.Item
               label="What kind of meaning does this hold for you?"
-              name="title"
+              name="name"
             >
               <Input.TextArea
                 rows={6}
@@ -60,12 +76,28 @@ const AddMeaning = () => {
                   <span className="text-[#4D4D4D]">(optional)</span>
                 </label>
               }
-              name="title"
+              name="enteredAt"
             >
               <Input
                 type="text"
                 placeholder="Write here..."
                 prefixCls="custom-input-colored"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={
+                <label className="leading-[150%]">
+                  Add a short description{" "}
+                  <span className="text-[#4D4D4D]">(optional)</span>
+                </label>
+              }
+              name="meaning"
+            >
+              <Input.TextArea
+                rows={4}
+                placeholder="Write here..."
+                className="bg-[#F2F1ED]!"
               />
             </Form.Item>
 

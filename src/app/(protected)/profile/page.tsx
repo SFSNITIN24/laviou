@@ -7,10 +7,24 @@ import sampleProfile from "@/assets/images/profileimage.png";
 import Button from "@/components/Button";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
+import { useCurrentUser } from "@/features/auth/hooks/useAuth";
+import { useEffect } from "react";
 
 
 const ProfilePage = () => {
   const profilePhoto = "null";
+  const [form] = Form.useForm();
+  const { data, isLoading } = useCurrentUser();
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+      });
+    }
+  }, [data, form]);
 
   const onFinish = (values: {
     email: string;
@@ -24,7 +38,7 @@ const ProfilePage = () => {
 
     <div className="py-[18px] min-h-[calc(100vh-72px)]">
       <Link
-        href="/dashboard"
+        href="/museum"
         className="flex items-center gap-2 text-[#6E745E] hover:underline text-base font-medium sm:text-lg h-[24px]"
       >
         <LeftArrow />
@@ -73,6 +87,7 @@ const ProfilePage = () => {
         </div>
 
         <Form
+          form={form}
           layout="vertical"
           onFinish={onFinish}
           className="mt-8 w-full"
@@ -108,7 +123,7 @@ const ProfilePage = () => {
             variant="primary"
 
           >
-            Update Profile
+            {isLoading ? "Loading..." : "Update Profile"}
           </Button>
         </Form>
       </div>

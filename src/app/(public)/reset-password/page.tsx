@@ -7,6 +7,7 @@ import { Eye, EyeSlash } from "@/utils/svg";
 import { Form, Input } from "antd";
 import { useRouter } from "next/navigation";
 import { formRules } from "@/constants/formRules";
+import { clearPasswordResetFlow } from "@/lib/password-reset-flow";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -16,10 +17,9 @@ export default function ResetPasswordPage() {
     confirmPassword: string;
   }) => {
     console.log(values);
-    document.cookie = `auth-token=dummy-auth-token-123; path=/; max-age=${
-      60 * 60 * 24
-    }`;
-    router.push("/dashboard");
+    // Backend endpoint is not implemented yet (returns 501), so we finish the flow locally.
+    clearPasswordResetFlow();
+    router.push("/login");
   };
 
   return (

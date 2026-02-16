@@ -6,12 +6,16 @@ import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
+import { getPasswordResetEmail, markOtpVerified } from "@/lib/password-reset-flow";
+import { useMemo } from "react";
 
 export default function OtpVerificationPage() {
   const router = useRouter();
+  const email = useMemo(() => getPasswordResetEmail(), []);
 
   const handleSubmit = (values: { otp: string }) => {
     console.log("OTP Submitted:", values.otp);
+    markOtpVerified();
     router.push("/reset-password");
   };
 
@@ -19,7 +23,7 @@ export default function OtpVerificationPage() {
     <AppLayout
       variant="auth"
       title="OTP Verification"
-      subtitle="Please enter 6-digit OTP sent to debbie.baker@example.com"
+      subtitle={`Please enter 6-digit OTP sent to ${email || "your email"}`}
       authSwitchText="Don't have an account? Sign up"
       authSwitchLink="/register"
       authLeftTitle="Home"

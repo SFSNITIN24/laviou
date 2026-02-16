@@ -8,16 +8,24 @@ import AppLayout from "@/components/AppLayout";
 import Button from "@/components/Button";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
+import { useLogin, useRegister } from "@/features/auth/hooks/useAuth";
+import { useState } from "react";
 
 const RegisterPage = () => {
   const router = useRouter();
+  const register = useRegister();
+  const login = useLogin();
+  const [error, setError] = useState<string | null>(null);
 
-  const onFinish = (values: RegisterPayload) => {
-    console.log(values);
-    document.cookie = `auth-token=dummy-auth-token-123; path=/; max-age=${
-      60 * 60 * 24
-    }`;
-    router.push("/onboarding");
+  const onFinish = async (values: RegisterPayload) => {
+    setError(null);
+    try {
+      await register.mutateAsync(values);
+      await login.mutateAsync({ email: values.email, password: values.password });
+      router.push("/onboarding");
+    } catch (e: any) {
+      setError(e?.response?.data?.message || "Registration failed");
+    }
   };
 
   return (
@@ -37,6 +45,7 @@ const RegisterPage = () => {
         className="mt-8"
         requiredMark={false}
       >
+        {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
         <Row gutter={12}>
           <Col xs={24} sm={12}>
             <Form.Item
@@ -114,7 +123,7 @@ const RegisterPage = () => {
         </Form.Item>
 
         <Button htmlType="submit" variant="primary" className="w-full !h-12 !mt-9">
-          Sign up
+          {register.isPending || login.isPending ? "Creating..." : "Sign up"}
         </Button>
       </Form>
     </AppLayout>

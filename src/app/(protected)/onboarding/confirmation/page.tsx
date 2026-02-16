@@ -1,9 +1,40 @@
+"use client";
+
 import homeImage from "@/assets/images/home.png";
 import Button from "@/components/Button";
 import Image from "next/image";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useCreateItem } from "@/features/items/hooks/useItems";
+
+const DRAFT_KEY = "onboarding:itemDraft";
 
 const Confirmation = () => {
+  const createItem = useCreateItem();
+  const [createdId, setCreatedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Create an item from onboarding draft (API integration).
+    const run = async () => {
+      if (createdId) return;
+      try {
+        const raw = sessionStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        const draft = JSON.parse(raw) as { name?: string; description?: string };
+        if (!draft?.name) return;
+        const res = await createItem.mutateAsync({
+          name: draft.name,
+          description: draft.description ?? draft.name,
+        });
+        setCreatedId(res.data.data.id);
+        sessionStorage.removeItem(DRAFT_KEY);
+      } catch {
+        // keep UI usable even if backend is down
+      }
+    };
+    run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col gap-12 justify-center items-center py-11 min-h-[calc(100vh-72px)] w-full text-black">
       <Image
@@ -18,7 +49,13 @@ const Confirmation = () => {
         <h2 className="text-2xl md:text-5xl"> Your story is safe here.</h2>
         <p className="md:text-xl">You may return whenever you're ready.</p>
 
-          <Button href="/dashboard" variant="primary" className="min-w-full! md:w-80.25 h-12 mt-5">
+          {createdId && (
+            <div className="text-xs text-gray-500">
+              Created item: <code>{createdId}</code>
+            </div>
+          )}
+
+          <Button href="/museum" variant="primary" className="min-w-full! md:w-80.25 h-12 mt-5">
             Return to My Museum
           </Button>
       </div>

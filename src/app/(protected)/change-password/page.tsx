@@ -22,7 +22,7 @@ const ChangePasswordPage = () => {
   return (
     <div className="py-[18px] min-h-[calc(100vh-72px)]">
       <Link
-        href="/dashboard"
+        href="/museum"
         className="flex items-center gap-2 text-[#6E745E] hover:underline text-base font-medium sm:text-lg h-[24px]"
       >
         <LeftArrow />

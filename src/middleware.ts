@@ -1,26 +1,39 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicPaths = ["/login", "/register", "/forgot-password","/reset-password"];
+type RouteFlags = {
+  isPublic: boolean;
+  redirectIfAuthed?: boolean;
+  requiresPwResetFlow?: boolean;
+  requiresPwResetVerified?: boolean;
+};
+
+const AUTH_ROUTES = ["/login", "/register"] as const;
+const PUBLIC_ROUTES = ["/", "/forgot-password"] as const;
+
+function flagsFor(pathname: string): RouteFlags {
+  if (AUTH_ROUTES.some((p) => pathname === p)) {
+    return { isPublic: true, redirectIfAuthed: true };
+  }
+  if (PUBLIC_ROUTES.some((p) => pathname === p)) {
+    return { isPublic: true };
+  }
+  if (pathname === "/otp-verification") {
+    return { isPublic: true, requiresPwResetFlow: true };
+  }
+  if (pathname === "/reset-password") {
+    return { isPublic: true, requiresPwResetVerified: true };
+  }
+  return { isPublic: false };
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public paths to pass through
-  const isPublicPath = publicPaths.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
-  );
-
-  // Allow public paths and homepage
-  if (isPublicPath || pathname === "/") {
-    // If user is already authenticated, redirect to museum instead of dashboard
-    const token = request.cookies.get("auth-token")?.value;
-    if (token && (pathname === "/login" || pathname === "/register")) {
-      const museumUrl = new URL("/museum", request.url);
-      return NextResponse.redirect(museumUrl);
-    }
-    return NextResponse.next();
-  }
+  const token = request.cookies.get("auth-token")?.value;
+  const pwResetFlow = request.cookies.get("pw-reset-flow")?.value;
+  const pwResetVerified = request.cookies.get("pw-reset-verified")?.value;
+  const flags = flagsFor(pathname);
 
   // Redirect dashboard to museum
   if (pathname === "/dashboard") {
@@ -28,8 +41,24 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(museumUrl);
   }
 
-  // Check for auth token
-  const token = request.cookies.get("auth-token")?.value;
+  // Stop opening OTP directly
+  if (flags.requiresPwResetFlow && !pwResetFlow) {
+    return NextResponse.redirect(new URL("/forgot-password", request.url));
+  }
+
+  // Stop opening reset-password directly
+  if (flags.requiresPwResetVerified && !pwResetVerified) {
+    return NextResponse.redirect(new URL("/forgot-password", request.url));
+  }
+
+  // If user is authenticated, keep them out of auth pages
+  if (token && flags.redirectIfAuthed) {
+    const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+    return NextResponse.redirect(new URL(callbackUrl || "/museum", request.url));
+  }
+
+  // Allow public pages
+  if (flags.isPublic) return NextResponse.next();
 
   if (!token) {
     const loginUrl = new URL("/login", request.url);
