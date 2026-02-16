@@ -4,7 +4,23 @@ import { clearAuthToken, clearRefreshToken, getRefreshToken, setAuthToken, setRe
 
 type RetryAxiosRequestConfig = AxiosRequestConfig & {
     __isRetryRequest?: boolean;
+    __silentSuccessMessage?: boolean;
 };
+
+type ApiEnvelope = {
+    success?: boolean;
+    message?: string;
+};
+
+let messageModulePromise: Promise<(typeof import("antd"))["message"]> | null = null;
+async function showSuccessToast(text: string) {
+    if (typeof window === "undefined") return;
+    if (!messageModulePromise) {
+        messageModulePromise = import("antd").then((m) => m.message);
+    }
+    const msg = await messageModulePromise;
+    msg.success(text);
+}
 
 const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api",
@@ -35,7 +51,26 @@ apiClient.interceptors.request.use(
 
 // Response interceptor — handle errors globally
 apiClient.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        const cfg = response.config as RetryAxiosRequestConfig | undefined;
+        const method = (cfg?.method || "get").toLowerCase();
+        const url = cfg?.url || "";
+        const data = response.data as ApiEnvelope | undefined;
+
+        // Global success notifications for mutations.
+        if (
+            !cfg?.__silentSuccessMessage &&
+            method !== "get" &&
+            url &&
+            !url.includes("/auth/refresh") &&
+            data?.success === true &&
+            typeof data.message === "string" &&
+            data.message.trim() !== ""
+        ) {
+            void showSuccessToast(data.message);
+        }
+        return response;
+    },
     async (error) => {
         const status = error?.response?.status;
         const originalRequest = error?.config as RetryAxiosRequestConfig | undefined;
