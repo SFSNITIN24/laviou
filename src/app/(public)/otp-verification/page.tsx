@@ -10,14 +10,10 @@ import { authApi } from "@/features/auth/api/auth.api";
 import { getApiErrorMessage } from "@/lib/api-error";
 import {
   getPasswordResetEmail,
-  getPasswordResetToken,
   markOtpVerified,
   setPasswordResetToken,
 } from "@/lib/password-reset-flow";
 import { useMemo, useState } from "react";
-import type { ApiResponse } from "@/types/api.types";
-
-type ForgotPasswordResult = { token?: string };
 
 export default function OtpVerificationPage() {
   const router = useRouter();
@@ -27,15 +23,22 @@ export default function OtpVerificationPage() {
 
   const handleSubmit = async (values: { otp: string }) => {
     setError(null);
-    const expected = getPasswordResetToken();
-    if (expected && expected !== values.otp) {
-      setError("Invalid OTP");
+    if (!email) {
+      setError("Missing email. Please restart the flow.");
       return;
     }
-    // For now, OTP is treated as the token needed for reset-password call.
-    setPasswordResetToken(values.otp);
-    markOtpVerified();
-    router.push("/reset-password");
+    setLoading(true);
+    try {
+      const res = await authApi.verifyResetOtp(email, values.otp);
+      const resetToken = res.data.data.resetToken;
+      setPasswordResetToken(resetToken);
+      markOtpVerified();
+      router.push("/reset-password");
+    } catch (e: unknown) {
+      setError(getApiErrorMessage(e, "Invalid OTP"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleResend = async () => {
@@ -43,10 +46,7 @@ export default function OtpVerificationPage() {
     setError(null);
     setLoading(true);
     try {
-      const res = await authApi.forgotPassword(email);
-      const data = res.data as ApiResponse<ForgotPasswordResult>;
-      const token = data.data.token;
-      if (token) setPasswordResetToken(token);
+      await authApi.forgotPassword(email);
     } catch (e: unknown) {
       setError(getApiErrorMessage(e, "Failed to resend code"));
     } finally {

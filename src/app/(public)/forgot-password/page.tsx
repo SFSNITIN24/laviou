@@ -5,13 +5,10 @@ import FormLabel from "@/components/FormLabel";
 import { Form, Input } from "antd";
 import { useRouter } from "next/navigation";
 import { formRules } from "@/constants/formRules";
-import { startPasswordResetFlow, setPasswordResetToken } from "@/lib/password-reset-flow";
+import { startPasswordResetFlow } from "@/lib/password-reset-flow";
 import { authApi } from "@/features/auth/api/auth.api";
 import { useState } from "react";
 import { getApiErrorMessage } from "@/lib/api-error";
-import type { ApiResponse } from "@/types/api.types";
-
-type ForgotPasswordResult = { token?: string };
 
 const ForgotPasswordForm = () => {
   const router = useRouter();
@@ -22,10 +19,7 @@ const ForgotPasswordForm = () => {
     setError(null);
     setLoading(true);
     try {
-      const res = await authApi.forgotPassword(values.email);
-      const data = res.data as ApiResponse<ForgotPasswordResult>;
-      const token = data.data.token;
-      if (token) setPasswordResetToken(token);
+      await authApi.forgotPassword(values.email);
       startPasswordResetFlow(values.email);
       router.push("/otp-verification");
     } catch (e: unknown) {
