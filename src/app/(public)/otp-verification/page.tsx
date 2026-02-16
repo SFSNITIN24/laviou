@@ -9,17 +9,22 @@ import { formRules } from "@/constants/formRules";
 import { authApi } from "@/features/auth/api/auth.api";
 import { getApiErrorMessage } from "@/lib/api-error";
 import {
-  getPasswordResetEmail,
   markOtpVerified,
   setPasswordResetToken,
 } from "@/lib/password-reset-flow";
-import { useMemo, useState } from "react";
+import { getPasswordResetEmail } from "@/lib/password-reset-flow";
+import { useEffect, useState } from "react";
 
 export default function OtpVerificationPage() {
   const router = useRouter();
-  const email = useMemo(() => getPasswordResetEmail(), []);
+  // Avoid hydration mismatches: sessionStorage is client-only.
+  const [email, setEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setEmail(getPasswordResetEmail());
+  }, []);
 
   const handleSubmit = async (values: { otp: string }) => {
     setError(null);
