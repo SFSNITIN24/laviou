@@ -30,8 +30,13 @@ export function useLogin() {
 }
 
 export function useRegister() {
+    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (payload: RegisterPayload) => authApi.register(payload),
+        onSuccess: (res) => {
+            setAuthToken(res.data.data.tokens.accessToken);
+            queryClient.invalidateQueries({ queryKey: authKeys.me() });
+        },
     });
 }
 

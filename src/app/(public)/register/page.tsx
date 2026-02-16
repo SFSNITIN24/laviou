@@ -14,14 +14,12 @@ import { useState } from "react";
 const RegisterPage = () => {
   const router = useRouter();
   const register = useRegister();
-  const login = useLogin();
   const [error, setError] = useState<string | null>(null);
 
   const onFinish = async (values: RegisterPayload) => {
     setError(null);
     try {
       await register.mutateAsync(values);
-      await login.mutateAsync({ email: values.email, password: values.password });
       router.push("/onboarding");
     } catch (e: any) {
       setError(e?.response?.data?.message || "Registration failed");
@@ -123,7 +121,7 @@ const RegisterPage = () => {
         </Form.Item>
 
         <Button htmlType="submit" variant="primary" className="w-full !h-12 !mt-9">
-          {register.isPending || login.isPending ? "Creating..." : "Sign up"}
+          {register.isPending ? "Creating..." : "Sign up"}
         </Button>
       </Form>
     </AppLayout>

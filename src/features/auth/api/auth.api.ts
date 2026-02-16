@@ -4,6 +4,7 @@ import type {
     RegisterPayload,
     AuthUser,
     AuthTokens,
+    RegisterResult,
 } from "../types/auth.types";
 import type { ApiResponse } from "@/types/api.types";
 
@@ -12,7 +13,7 @@ export const authApi = {
         apiClient.post<ApiResponse<AuthTokens>>("/auth/login", payload),
 
     register: (payload: RegisterPayload) =>
-        apiClient.post<ApiResponse<AuthUser>>("/auth/register", payload),
+        apiClient.post<ApiResponse<RegisterResult>>("/auth/register", payload),
 
     logout: () => apiClient.post("/auth/logout"),
 
