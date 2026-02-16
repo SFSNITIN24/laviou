@@ -16,11 +16,20 @@ const FEELINGS = [
   { label: "Joy", value: "joy" },
 ];
 
+type FeelingValue = (typeof FEELINGS)[number]["value"];
+
+type MeaningFormValues = {
+  name: string;
+  enteredAt?: string;
+  meaning?: string;
+  feelings?: FeelingValue[];
+};
+
 const AddMeaning = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<MeaningFormValues>();
   const router = useRouter();
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: MeaningFormValues) => {
     try {
       sessionStorage.setItem(
         "onboarding:itemDraft",

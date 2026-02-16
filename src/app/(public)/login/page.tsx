@@ -10,26 +10,26 @@ import { useRouter } from "next/navigation";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
 import { useLogin } from "@/features/auth/hooks/useAuth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export default function LoginPage() {
   const router = useRouter();
   const login = useLogin();
   const [error, setError] = useState<string | null>(null);
-  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
-
-  useEffect(() => {
+  const [callbackUrl] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
     const url = new URL(window.location.href);
-    setCallbackUrl(url.searchParams.get("callbackUrl"));
-  }, []);
+    return url.searchParams.get("callbackUrl");
+  });
 
   const handleSubmit = async (values: LoginPayload) => {
     setError(null);
     try {
       await login.mutateAsync(values);
       router.push(callbackUrl || "/museum");
-    } catch (e: any) {
-      setError(e?.response?.data?.message || "Login failed");
+    } catch (e: unknown) {
+      setError(getApiErrorMessage(e, "Login failed"));
     }
   };
 

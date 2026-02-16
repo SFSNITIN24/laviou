@@ -18,6 +18,7 @@ export default function HomePage() {
         </div>
 
         <div className="mb-12 max-w-[778px] mx-auto">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={homeImage.src}
             

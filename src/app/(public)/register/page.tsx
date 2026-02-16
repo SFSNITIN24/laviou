@@ -8,8 +8,9 @@ import AppLayout from "@/components/AppLayout";
 import Button from "@/components/Button";
 import FormLabel from "@/components/FormLabel";
 import { formRules } from "@/constants/formRules";
-import { useLogin, useRegister } from "@/features/auth/hooks/useAuth";
+import { useRegister } from "@/features/auth/hooks/useAuth";
 import { useState } from "react";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -21,8 +22,8 @@ const RegisterPage = () => {
     try {
       await register.mutateAsync(values);
       router.push("/onboarding");
-    } catch (e: any) {
-      setError(e?.response?.data?.message || "Registration failed");
+    } catch (e: unknown) {
+      setError(getApiErrorMessage(e, "Registration failed"));
     }
   };
 

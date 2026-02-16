@@ -37,6 +37,7 @@ export default function ProfileDropdown() {
         }}
         className="flex items-center justify-center rounded-lg transition-colors cursor-pointer w-[44px] h-[44px]"
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face"
           alt="Profile"

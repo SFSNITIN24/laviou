@@ -52,8 +52,8 @@ export const formRules = {
   
   confirmPassword: (passwordField: string = "newPassword"): Rule[] => [
     { required: true, message: "Please confirm your password" },
-    ({ getFieldValue }: any) => ({
-      validator(_: any, value: string) {
+    ({ getFieldValue }: { getFieldValue: (name: string) => unknown }) => ({
+      validator(_rule: unknown, value: string) {
         if (!value || getFieldValue(passwordField) === value) {
           return Promise.resolve();
         }

@@ -32,7 +32,7 @@ export default function LogoutModal({ open, onClose }: LogoutModalProps) {
           </h2>
 
           <p className="font-body text-base font-normal leading-[1.5] tracking-normal text-center text-[#4D4D4D]">
-            You're about to log out of your account
+            You&apos;re about to log out of your account
           </p>
         </div>
 

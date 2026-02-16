@@ -47,7 +47,7 @@ const Confirmation = () => {
       />
       <div className="flex flex-col gap-3 justify-center items-center">
         <h2 className="text-2xl md:text-5xl"> Your story is safe here.</h2>
-        <p className="md:text-xl">You may return whenever you're ready.</p>
+        <p className="md:text-xl">You may return whenever you&apos;re ready.</p>
 
           {createdId && (
             <div className="text-xs text-gray-500">

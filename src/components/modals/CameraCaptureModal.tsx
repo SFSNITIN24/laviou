@@ -1,5 +1,5 @@
 import { Badge, Button, Modal } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CameraOutlined, PictureOutlined } from "@ant-design/icons";
 import Image from "next/image";
 
@@ -22,7 +22,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const startCamera = async () => {
+  const startCamera = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -41,14 +41,14 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const stopCamera = () => {
+  const stopCamera = useCallback(() => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
       setStream(null);
     }
-  };
+  }, [stream]);
 
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return;
@@ -106,7 +106,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
     return () => {
       stopCamera();
     };
-  }, [open]);
+  }, [open, startCamera, stopCamera]);
 
   return (
     <Modal
@@ -241,15 +241,11 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
 // Camera button component with selection modal
 interface CameraCaptureButtonProps {
   onCapture: (file: File) => void;
-  label?: string;
-  className?: string;
   disabled?: boolean;
 }
 
 export const CameraCaptureButton: React.FC<CameraCaptureButtonProps> = ({
   onCapture,
-  label = "Scan License",
-  className = "",
   disabled = false,
 }) => {
   const [selectionModalOpen, setSelectionModalOpen] = useState(false);

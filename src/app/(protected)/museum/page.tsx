@@ -115,6 +115,7 @@ export default function MuseumPage() {
             >
               {/* Image */}
               <div className="w-full h-[323px] overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={collection.image}
                   alt={collection.title}

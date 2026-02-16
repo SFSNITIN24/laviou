@@ -1,7 +1,6 @@
 import React from "react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Button from "@/components/Button";
-import { ReactNode } from "react";
 import Link from "next/link";
 import { ChevronLeftIcon } from "@/utils/svg";
 import Logo from "./Logo";
