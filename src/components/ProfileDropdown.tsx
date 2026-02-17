@@ -16,7 +16,7 @@ export default function ProfileDropdown() {
   const menuItems = [
     { label: "My Profile", link: "/profile" },
     { label: "Change Password", link: "/change-password" },
-    { label: "Draft", link: "/draft" },
+    { label: "Draft", link: "/drafts" },
     { label: "My Donation", link: "/donation" },
     { label: "Concierge", link: "/concierge" },
     { label: "Archive", link: "/archive" },

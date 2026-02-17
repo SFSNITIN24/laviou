@@ -8,7 +8,7 @@ type RouteFlags = {
   requiresPwResetVerified?: boolean;
 };
 
-const AUTH_ROUTES = ["/login", "/register"] as const;
+const AUTH_ROUTES = ["/login", "/register", "/concierge", "/marketplace/confirmation"] as const;
 const PUBLIC_ROUTES = ["/", "/forgot-password"] as const;
 
 function flagsFor(pathname: string): RouteFlags {
@@ -79,6 +79,6 @@ export const config = {
      * - api routes
      * - public assets
      */
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|api).*)",
+    // "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|api).*)",
   ],
 };
