@@ -105,14 +105,19 @@ body::-webkit-scrollbar {
   border-color: #8a9078 !important;
 }
 
+.custom-radio-wrapper .custom-radio {
+  background: transparent;
+  border: 2px solid #8a9078;
+}
+
 .custom-divider {
   border: none;
   height: 1px;
   background-image: repeating-linear-gradient(
     to right,
-    #4D4D4D,
-    #4D4D4D 6px,   /* dash length */
-    transparent 6px,
+    #4d4d4d,
+    #4d4d4d 6px,
+    /* dash length */ transparent 6px,
     transparent 14px /* gap between dashes */
   );
 }
