@@ -2,16 +2,7 @@
 
 import Image from "next/image";
 import Button from "@/components/Button";
-import React from "react";
-
-type CommonSuccessLayoutProps = {
-  card?: string | React.ReactNode;
-  title: string;
-  subtitle?: string;
-  helperText?: string;
-  buttonText?: string;
-  buttonHref?: string;
-};
+import { ConfirmationComponentProps } from "@/features/items/types/items.types";
 
 const ConfirmedActionPage = ({
   card,
@@ -20,7 +11,9 @@ const ConfirmedActionPage = ({
   helperText,
   buttonText = "Return to My Museum",
   buttonHref = "/museum",
-}: CommonSuccessLayoutProps) => {
+  buttonText2,
+  buttonHref2,
+}: ConfirmationComponentProps) => {
   return (
     <div className="flex flex-col gap-8 md:gap-10 items-center justify-center text-center py-12.75 min-h-[calc(100vh-72px)]">
       {/* Card */}
@@ -63,6 +56,15 @@ const ConfirmedActionPage = ({
           >
             {buttonText}
           </Button>
+          {buttonText2 && (
+            <Button
+              href={buttonHref2}
+              variant="outline"
+              className="font-normal! h-12 w-full max-w-85.5 border-none! mt-1.5"
+            >
+              {buttonText2}
+            </Button>
+          )}
         </div>
       </div>
     </div>

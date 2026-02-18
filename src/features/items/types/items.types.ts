@@ -35,3 +35,14 @@ export interface DonateItemPayload {
     organizationId: string;
     notes?: string;
 }
+
+export interface ConfirmationComponentProps {
+  card?: string | React.ReactNode;
+  title: string;
+  subtitle?: string;
+  helperText?: string;
+  buttonText?: string;
+  buttonHref?: string;
+  buttonText2?: string;
+  buttonHref2?: string;
+};

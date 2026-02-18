@@ -8,7 +8,7 @@ type RouteFlags = {
   requiresPwResetVerified?: boolean;
 };
 
-const AUTH_ROUTES = ["/login", "/register", "/concierge", "/marketplace/confirmation"] as const;
+const AUTH_ROUTES = ["/login", "/register"] as const;
 const PUBLIC_ROUTES = ["/", "/forgot-password"] as const;
 
 function flagsFor(pathname: string): RouteFlags {
@@ -54,7 +54,9 @@ export function middleware(request: NextRequest) {
   // If user is authenticated, keep them out of auth pages
   if (token && flags.redirectIfAuthed) {
     const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
-    return NextResponse.redirect(new URL(callbackUrl || "/museum", request.url));
+    return NextResponse.redirect(
+      new URL(callbackUrl || "/museum", request.url),
+    );
   }
 
   // Allow public pages
@@ -79,6 +81,6 @@ export const config = {
      * - api routes
      * - public assets
      */
-    // "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|api).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|api).*)",
   ],
 };

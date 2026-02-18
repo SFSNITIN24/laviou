@@ -22,7 +22,6 @@ const ConfirmationPage = () => {
       : null;
 
   useEffect(() => {
-    console.log(type, id, router);
     if (!type && id) {
       router.replace(`/${pathname?.split("/")[1]}/${id}`);
     }
@@ -37,6 +36,8 @@ const ConfirmationPage = () => {
         title={confirmationConfig.title}
         subtitle={confirmationConfig.subtitle}
         helperText={confirmationConfig.helperText}
+        buttonText2={confirmationConfig.buttonText2}
+        buttonHref2={confirmationConfig.buttonHref2}
       />
     </div>
   );
