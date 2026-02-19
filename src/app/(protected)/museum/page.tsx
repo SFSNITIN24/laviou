@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { ButtonForwardButton, ButtonPreviousButton } from "@/utils/svg";
 import { useItems } from "@/features/items/hooks/useItems";
+import { useRouter } from "next/navigation";
 
 interface Collection {
   id: string;
@@ -17,6 +18,7 @@ const CARD_WIDTH = 346;
 const GAP = 100;
 
 export default function MuseumPage() {
+  const router = useRouter()
   const { data, isLoading, error } = useItems(1);
   const collections: Collection[] =
     data?.data?.map((item) => ({
@@ -70,7 +72,7 @@ export default function MuseumPage() {
 
 
   return (
-    <div className="w-full flex flex-col gap-16 my-[17px]">
+    <div className="w-full flex flex-col gap-16 py-[17px]">
       <div className="flex flex-col gap-5">
 
         <div className="flex flex-col gap-2">
@@ -87,14 +89,15 @@ export default function MuseumPage() {
         {/* Action Buttons */}
         <div className="flex flex-col items-center sm:flex-row justify-center gap-3">
           <Button
+            href="/onboarding"
             variant="primary"
             className="w-[340px] sm:w-[260px] h-12!"
           >
             Add another item
           </Button>
           <Button
-            variant="secondary"
-            className=" w-[340px] sm:w-[260px] h-12!"
+            variant="outline"
+            className=" w-[340px] sm:w-[260px] h-12! text-black! font-normal!"
           >
             View an exhibit
           </Button>
@@ -111,6 +114,7 @@ export default function MuseumPage() {
           {visibleCollections?.length ? visibleCollections.map((collection) => (
             <div
               key={collection.id}
+              onClick={() => router.push(`/museum/${collection.id}`)}
               className="w-[346px] h-[456px] bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col"
             >
               {/* Image */}

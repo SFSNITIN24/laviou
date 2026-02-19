@@ -48,7 +48,7 @@ export default function ProfileDropdown() {
       {/* Dropdown Menu - Only on desktop */}
       {isOpen && (
         <div
-  className="
+          className="
     absolute right-0 mt-2
     w-[175px]
     bg-white/90
@@ -60,15 +60,15 @@ export default function ProfileDropdown() {
     backdrop-blur-[30px]
     shadow-[-0.27px_-0.27px_1.09px_rgba(255,255,255,0.4)_inset,0px_4.35px_21.75px_rgba(0,0,0,0.1)]
   "
->
-  {menuItems?.map((item, index) => (
-    <span
-      key={index}
-      onClick={() => {
-        router.push(item.link);
-        setIsOpen(false);
-      }}
-      className="
+        >
+          {menuItems?.map((item, index) => (
+            <span
+              key={index}
+              onClick={() => {
+                router.push(item.link);
+                setIsOpen(false);
+              }}
+              className="
         flex items-center gap-[5px]
         w-[151px] h-[37px]
         px-[6px] py-2
@@ -79,17 +79,17 @@ export default function ProfileDropdown() {
         transition-colors
         cursor-pointer
       "
-    >
-      {item.label}
-    </span>
-  ))}
+            >
+              {item.label}
+            </span>
+          ))}
 
-  {/* Divider */}
-  <div className="border-t border-gray-200 my-2" />
+          {/* Divider */}
+          <div className="border-t border-gray-200 my-2" />
 
-  {/* Logout */}
-  <span
-    className="
+          {/* Logout */}
+          <span
+            className="
       flex items-center gap-[5px]
       w-[151px] h-[37px]
       px-[6px] py-2
@@ -99,16 +99,15 @@ export default function ProfileDropdown() {
       hover:bg-red-50
       transition-colors
     "
-    onClick={(e) => {
-      e.preventDefault();
-      setIsOpen(false);
-      setIsLogoutModalOpen(true);
-    }}
-  >
-    Logout
-  </span>
-</div>
-
+            onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(false);
+              setIsLogoutModalOpen(true);
+            }}
+          >
+            Logout
+          </span>
+        </div>
       )}
 
       {/* Overlay to close dropdown when clicking outside - Only on desktop */}
@@ -120,7 +119,10 @@ export default function ProfileDropdown() {
       )}
 
       {/* Logout Modal */}
-      <LogoutModal open={isLogoutModalOpen} onClose={() => setIsLogoutModalOpen(false)} />
+      <LogoutModal
+        open={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+      />
     </div>
   );
 }
