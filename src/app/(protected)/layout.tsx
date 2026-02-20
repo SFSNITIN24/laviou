@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LogoutModal from "@/components/modals/LogoutModal";
 import AppLayout from "@/components/AppLayout";
+import BuyerInterestDrawer from "@/components/BuyerInterestDrawer";
 
 export default function ProtectedLayout({
   children,
@@ -13,6 +14,7 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [buyerInterestOpen, setBuyerInterestOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const router = useRouter();
 
@@ -25,6 +27,18 @@ export default function ProtectedLayout({
     return () =>
       window.removeEventListener("toggle-sidebar", handleToggleSidebar);
   }, []);
+
+  useEffect(() => {
+    if (buyerInterestOpen || isSidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [buyerInterestOpen, isSidebarOpen]);
 
   return (
     <>
@@ -112,22 +126,32 @@ export default function ProtectedLayout({
         </nav>
       </aside>
 
+      <BuyerInterestDrawer
+        open={buyerInterestOpen}
+        setOpen={setBuyerInterestOpen}
+      />
+
       {/* Mobile Overlay */}
-      {isSidebarOpen && (
+      {(isSidebarOpen || buyerInterestOpen) && (
         <div
           className="fixed inset-0 backdrop-blur-[5.1px] z-50 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={() => {
+            setIsSidebarOpen(false);
+            setBuyerInterestOpen(false);
+          }}
         />
       )}
 
       {/* Logout Modal */}
-      <LogoutModal open={isLogoutModalOpen} onClose={() => setIsLogoutModalOpen(false)} />
+      <LogoutModal
+        open={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+      />
 
       {/* Main content */}
       <div className={`${isSidebarOpen ? "overflow-hidden max-h-screen" : ""}`}>
         <AppLayout variant="user" showFooter={false}>
-
-        {children}
+          {children}
         </AppLayout>
       </div>
     </>

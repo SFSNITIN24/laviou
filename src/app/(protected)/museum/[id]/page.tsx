@@ -8,13 +8,24 @@ import KeepItemModal from "@/components/modals/KeepItemModal";
 import ArchiveItemModal from "@/components/modals/ArchiveItemModal";
 import GiftItemModal from "@/components/modals/GiftItemModal";
 import DonateItemModal from "@/components/modals/DonateItemModal";
+import { useItem } from "@/features/items/hooks/useItems";
+import { useParams } from "next/navigation";
 
 const ArtifactDetails = () => {
+  const params = useParams();
+  const { data, isLoading, error } = useItem(params.id as string);
   const [modalStatus, setModalStatus] = useState({ status: false, action: "" });
 
   const dummyTags = ["During college", "Love"];
 
   const actions = ["keep", "gift", "donate", "sell", "archive"];
+
+  if (isLoading) {
+    return <div className="p-6">Loading museum...</div>;
+  }
+  if (error) {
+    return <div className="p-6">Failed to load museum items.</div>;
+  }
 
   return (
     <div className="flex flex-col md:flex-row gap-8 md:gap-12.5 py-8.5">
@@ -30,7 +41,7 @@ const ArtifactDetails = () => {
         <div className="flex flex-col gap-8">
           <div>
             <h2 className="text-[32px] md:text-[40px] leading-[120%] mb-3">
-              Artifact Title
+              {data?.name}
             </h2>
             {/* Tags */}
             <div className="flex gap-1.5">
@@ -46,16 +57,7 @@ const ArtifactDetails = () => {
           </div>
 
           <p className="leading-[160%] md:text-xl text-[#4D4D4D]">
-            This collection explores the quiet spaces between memories, where
-            the most profound reflections often reside. Each artifact chosen
-            represents a moment of stillness and the weight of unspoken
-            words.Silence is rarely empty. It is heavy with the things we chose
-            not to say, the paths we decided not to take, and the faces we
-            struggle to forget. In this gallery, we look at the textures of that
-            silence—the way dust settles on an old piano, orthe specific blue of
-            a dusk that feels infinite.Memory is a selective architect. It
-            discards the mundane and reinforces the moments of high emotional
-            contrast.
+            {data?.description}
           </p>
 
           <div className="flex md:flex-row flex-col gap-4">

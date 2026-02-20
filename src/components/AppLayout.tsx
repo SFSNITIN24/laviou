@@ -2,7 +2,7 @@ import React from "react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Button from "@/components/Button";
 import Link from "next/link";
-import { ChevronLeftIcon } from "@/utils/svg";
+import { ChevronLeftIcon, NotificationIcon } from "@/utils/svg";
 import Logo from "./Logo";
 
 interface AppLayoutProps {
@@ -100,8 +100,17 @@ export default function AppLayout({
               </div>
 
               {/* Navigation */}
-
               <nav className="flex items-center space-x-4">
+                <button
+                  aria-label="Buyer Interest"
+                  onClick={() => {
+                    window.dispatchEvent(new Event("open-buyer-interest"));
+                  }}
+                  className="cursor-pointer"
+                >
+                  <NotificationIcon />
+                </button>
+
                 <ProfileDropdown />
               </nav>
             </div>
@@ -182,9 +191,7 @@ export default function AppLayout({
       case "default":
       default:
         return (
-          <main className="px-4 sm:px-[40px] md:px-[80px]">
-            {children}
-          </main>
+          <main className="px-4 sm:px-[40px] md:px-[80px]">{children}</main>
         );
     }
   };

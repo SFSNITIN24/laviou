@@ -54,7 +54,9 @@ export function middleware(request: NextRequest) {
   // If user is authenticated, keep them out of auth pages
   if (token && flags.redirectIfAuthed) {
     const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
-    return NextResponse.redirect(new URL(callbackUrl || "/museum", request.url));
+    return NextResponse.redirect(
+      new URL(callbackUrl || "/museum", request.url),
+    );
   }
 
   // Allow public pages

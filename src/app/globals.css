@@ -87,6 +87,10 @@ body::-webkit-scrollbar {
   background: #f2f1ed !important;
 }
 
+.custom-input-colored-outlined {
+  background: #f2f1ed !important;
+}
+
 .custom-form-label-item .custom-form-label-item-label > label {
   font-weight: 500;
 }
@@ -99,4 +103,21 @@ body::-webkit-scrollbar {
 .custom-radio-wrapper .custom-radio-checked {
   background-color: #8a9078 !important;
   border-color: #8a9078 !important;
+}
+
+.custom-radio-wrapper .custom-radio {
+  background: transparent;
+  border: 2px solid #8a9078;
+}
+
+.custom-divider {
+  border: none;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    #4d4d4d,
+    #4d4d4d 6px,
+    /* dash length */ transparent 6px,
+    transparent 14px /* gap between dashes */
+  );
 }
